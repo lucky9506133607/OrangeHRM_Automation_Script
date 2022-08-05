@@ -14,6 +14,7 @@ Test: Login
 
 def driver():
     global driver 
+    global Test1
     driver = webdriver.Chrome("C:/Users/ls217/OneDrive/Desktop/OrangeHRM Automation Scripts/Python Script/Driver/chromedriver.exe")
     
     """step_settings = StepSettings(timeout=15000,
