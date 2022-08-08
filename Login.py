@@ -11,11 +11,13 @@ Test: Login
     Generated on 08/01/2022, 16:40:50
 """
 
+Update_Login_Test_Data = None
+
 def driver():
     global driver 
     global Test1
     global ThirdCommit
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome('C:/Users/ls217/OneDrive/Desktop/OrangeHRM Automation Scripts/Python Script/Driver/chromedriver.exe')
     
     """step_settings = StepSettings(timeout=15000,
                                  sleep_time=500,
@@ -29,21 +31,21 @@ def driver():
 
 def Test_Data(getCSV):
     if (getCSV == "OrangeHRM-TestCases - Login-TestData.csv"):
-        Login_df = pd.read_csv(getCSV)
+        Login_df = pd.read_csv('C:/Users/ls217/OneDrive/Desktop/OrangeHRM Automation Scripts/Python Script/TestCases CSV/OrangeHRM-TestCases - Login-TestData.csv')
         return Login_df
     else:
         return None
     
 def Update_Test_Data(Status, index_val):
-    df = Test_Data('OrangeHRM-TestCases - Login-TestData.csv')
-    if 'status' not in df.columns:
-        df["status"] = None
+    global Update_Login_Test_Data 
+    Update_Login_Test_Data = Test_Data('OrangeHRM-TestCases - Login-TestData.csv')
+    if 'status' not in Update_Login_Test_Data.columns:
+        Update_Login_Test_Data["status"] = None
     if Status == "Passed":
-        df["status"][index_val] = "Passed"
+        Update_Login_Test_Data["status"][index_val] = "Passed"
     else:
-        df["status"][index_val] = "Failed"
-        
-    return df
+        Update_Login_Test_Data["status"][index_val] = "Failed"     
+    return Update_Login_Test_Data
 
 def test_Login():
     driver()
