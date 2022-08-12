@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 import pandas as pd
+from Driver import chromedriver
+
 
 """
 Test: Login
@@ -11,44 +13,34 @@ Test: Login
     Generated on 08/01/2022, 16:40:50
 """
 
-Update_Login_Test_Data = None
+Update_Login_test_Data = pd.DataFrame()
 
-def driver():
-    global driver 
-    global Test1
-    global ThirdCommit
-    driver = webdriver.Chrome('C:/Users/ls217/OneDrive/Desktop/OrangeHRM Automation Scripts/Python Script/Driver/chromedriver.exe')
-    
-    """step_settings = StepSettings(timeout=15000,
-                                 sleep_time=500,
-                                 sleep_timing_type=SleepTimingType.Before,
-                                 screenshot_condition=TakeScreenshotConditionType.Success)
-    with DriverStepSettings(driver, step_settings):
-        """
-        
-    """yield driverz  
-    driver.quit()"""
+
+
 
 def Test_Data(getCSV):
+    global Update_Login_test_Data
     if (getCSV == "OrangeHRM-TestCases - Login-TestData.csv"):
-        Login_df = pd.read_csv('C:/Users/ls217/OneDrive/Desktop/OrangeHRM Automation Scripts/Python Script/TestCases CSV/OrangeHRM-TestCases - Login-TestData.csv')
+        Login_df = pd.read_csv(getCSV)
+        Update_Login_test_Data = Login_df
         return Login_df
     else:
         return None
     
 def Update_Test_Data(Status, index_val):
-    global Update_Login_Test_Data 
-    Update_Login_Test_Data = Test_Data('OrangeHRM-TestCases - Login-TestData.csv')
-    if 'status' not in Update_Login_Test_Data.columns:
-        Update_Login_Test_Data["status"] = None
+    
+    if 'status' not in Update_Login_test_Data.columns:
+        Update_Login_test_Data["status"] = None
     if Status == "Passed":
-        Update_Login_Test_Data["status"][index_val] = "Passed"
+        Update_Login_test_Data["status"][index_val] = "Passed"
     else:
-        Update_Login_Test_Data["status"][index_val] = "Failed"     
-    return Update_Login_Test_Data
+        Update_Login_test_Data["status"][index_val] = "Failed"
+        
+    return Update_Login_test_Data
 
 def test_Login():
-    driver()
+    ChromeDriver_obj = chromedriver
+    ChromeDriver_obj.Driver()
     print(Test_Data('OrangeHRM-TestCases - Login-TestData.csv'))
     df = Test_Data('OrangeHRM-TestCases - Login-TestData.csv')
     
@@ -58,27 +50,27 @@ def test_Login():
     ApplicationURL = "https://opensource-demo.orangehrmlive.com/"
     # 1. Navigate to '{ApplicationURL}'
     # Navigates the specified URL (Auto-generated)
-    driver.get(ApplicationURL)
+    ChromeDriver_obj.driver.get(ApplicationURL)
     
     for i in range(0, len(df)):
         # 2. Click 'txtUsername'
         time.sleep(3)
-        txtusername = driver.find_element(By.CSS_SELECTOR, "#txtUsername")
+        txtusername = ChromeDriver_obj.driver.find_element(By.CSS_SELECTOR, "#txtUsername")
         txtusername.click()
     
         # 3. Type '{Username}' in 'txtUsername'
-        txtusername = driver.find_element(By.CSS_SELECTOR, "#txtUsername")
+        txtusername = ChromeDriver_obj.driver.find_element(By.CSS_SELECTOR, "#txtUsername")
         if str(df['Username'][i]) != 'nan':
             txtusername.send_keys(str(df['Username'][i]))
         else:
             txtusername.send_keys('')
     
         # 4. Click 'txtPassword'
-        txtpassword = driver.find_element(By.XPATH, "/html/body/div[1]/div/div[3]/div[2]/div[2]/form/div[3]/input")
+        txtpassword = ChromeDriver_obj.driver.find_element(By.XPATH, "/html/body/div[1]/div/div[3]/div[2]/div[2]/form/div[3]/input")
         txtpassword.click()
     
         # 5. Type '{Password}' in 'txtPassword'
-        txtpassword = driver.find_element(By.XPATH, "/html/body/div[1]/div/div[3]/div[2]/div[2]/form/div[3]/input")
+        txtpassword = ChromeDriver_obj.driver.find_element(By.XPATH, "/html/body/div[1]/div/div[3]/div[2]/div[2]/form/div[3]/input")
         if str(df['Password'][i]) != 'nan':
             txtpassword.send_keys(str(df['Password'][i]))
         else:
@@ -86,12 +78,12 @@ def test_Login():
             
     
         # 6. Click 'Submit'
-        submit = driver.find_element(By.CSS_SELECTOR, "#btnLogin")
+        submit = ChromeDriver_obj.driver.find_element(By.CSS_SELECTOR, "#btnLogin")
         submit.click()
     
         # 7. Get text from 'Alert message' if it's visible
         try:
-            alert_message = driver.find_element(By.CSS_SELECTOR, "#spanMessage")
+            alert_message = ChromeDriver_obj.driver.find_element(By.CSS_SELECTOR, "#spanMessage")
             print(alert_message.text)
             print(Update_Test_Data('Failed', i))
             
@@ -103,14 +95,14 @@ def test_Login():
             
         # 8. Click 'Welcome rakeshShivamShivam' if it's visible
         try:
-            welcome_message = driver.find_element(By.XPATH, "/html/body/div[1]/div[1]/a[2]")
+            welcome_message = ChromeDriver_obj.driver.find_element(By.XPATH, "/html/body/div[1]/div[1]/a[2]")
             welcome_message.click()
         except:
             print('Invalid Username')
         time.sleep(5)
         # 9. Click 'Logout' if it's visible 
         try:
-            logout = driver.find_element(By.XPATH, "//*[@id='welcome-menu']/ul/li[3]/a")
+            logout = ChromeDriver_obj.driver.find_element(By.XPATH, "//*[@id='welcome-menu']/ul/li[3]/a")
             logout.click()
         except:
             print('Invalid username')
